@@ -1,38 +1,28 @@
 // Import dependencies
-const express = require('express');
-const mysql = require('mysql2');
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+
+import path from 'path';
+import mainRouter from './routes/index.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 // Create an Express app
 const app = express();
+app.use(cors()); 
+app.use(bodyParser.json());
+app.use(express.json());
 const port = 3000;
 
-// Create a MySQL connection pool
-const pool = mysql.createPool({
-  host: 'localhost',       // MySQL server host
-  user: 'root',            // MySQL username (default: 'root')
-  password: '',            // MySQL password (default is empty for XAMPP)
-  database: 'exam',     // The name of your database
-});
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Test the connection to MySQL
-pool.getConnection((err, connection) => {
-  if (err) {
-    console.error('Error connecting to the database:', err.stack);
-    return;
-  }
-  console.log('Connected to the MySQL server as ID ' + connection.threadId);
-});
 
-// Sample route to get data from MySQL
-app.get('/data', (req, res) => {
-  pool.query('SELECT * FROM papers', (err, results) => {
-    if (err) {
-      console.error('Error fetching data:', err);
-      return res.status(500).send('Error fetching data');
-    }
-    res.json(results);
-  });
-});
+app.use("/api",mainRouter);
+
+
+
 
 // Start the server
 app.listen(port, () => {
