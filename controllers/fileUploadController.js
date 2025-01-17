@@ -54,15 +54,15 @@ export const getFileById = async (req, res) => {
     }
 
     // Fetch the file path from the database
-    const query = 'SELECT file_url FROM papers WHERE id = ?';
+    const query = 'SELECT file_url FROM papers WHERE paper_id = ?';
     const rows = await queryPromise(query, [id]);
 
     if (rows.length === 0) {
       return res.status(404).json({ message: 'No file found for the given ID' });
     }
 
-    const { file_path } = rows[0];
-    res.status(200).json({ filePath: file_path });
+    const { file_url } = rows[0];
+    res.status(200).json({ filePath: file_url });
   } catch (error) {
     console.error('Error fetching file by ID:', error.message);
     res.status(500).json({ message: 'An error occurred while fetching the file' });

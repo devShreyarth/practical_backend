@@ -33,7 +33,7 @@ export const login = async (req, res) => {
   
       // Query the database to find the student by enrollment number
       const rows = await queryPromise(
-        'SELECT id, password FROM students WHERE enrollment_no = ?',
+        'SELECT id, password,name,paper_set FROM students WHERE enrollment_no = ?',
         [enrollment_no]
       );
   
@@ -51,7 +51,7 @@ export const login = async (req, res) => {
       }else{
              // Generate JWT using the JWT_SECRET from environment variables
       const token = jwt.sign(
-        { id: user.id, enrollment_no: enrollment_no },
+        { id: user.id, enrollment_no: enrollment_no, paper_set:user.paper_set },
         process.env.JWT_SECRET,  // Using JWT_SECRET from .env file
         { expiresIn: '1d' }  // Token expires in 1 day
       );

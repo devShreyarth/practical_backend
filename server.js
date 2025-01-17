@@ -15,8 +15,9 @@ app.use(bodyParser.json());
 app.use(express.json());
 const port = 3000;
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+const __dirname = path.resolve(path.dirname(new URL(import.meta.url).pathname).substring(1));
+
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 
 app.use("/api",mainRouter);
